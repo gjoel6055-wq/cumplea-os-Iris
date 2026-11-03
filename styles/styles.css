@@ -1,0 +1,433 @@
+:root {
+  --cover-blue: #7290a5;
+  --cover-ink: #14171a;
+  --paper-ivory: #f3f1e1; /* Color marfil de la imagen */
+  --border-line: rgba(20, 23, 26, 0.4);
+  --vintage-gold: #14171a;
+  --faded-ink: #2c2f33;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* Prevent scrolling on body, scroll on content instead */
+}
+
+body {
+  background-color: #111; /* Dark background behind the notebook */
+  color: var(--cover-ink);
+  font-family: 'Playfair Display', serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  letter-spacing: -0.2px;
+}
+
+/* Grano analógico y textura de papel global */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  filter: url(#paper-grain);
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  z-index: 50;
+}
+
+/* ====================================================
+   CONTENEDOR DEL CUADERNO Y PÁGINAS
+   ==================================================== */
+.notebook-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  perspective: 2500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.book-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform-origin: left center;
+  -webkit-transform-origin: left center;
+  transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.9s ease;
+  -webkit-transition: -webkit-transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.9s ease;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background-color: transparent; /* Fallback for Safari */
+}
+
+.book-cover {
+  background-color: var(--cover-blue);
+  background-image: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.22) 100%);
+  filter: contrast(102%) brightness(98%);
+  padding: 30px 20px;
+}
+
+.ivory-page {
+  background-color: var(--paper-ivory);
+  background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.06) 100%);
+  color: var(--faded-ink);
+  box-shadow: inset 0 0 60px rgba(180, 160, 130, 0.2);
+}
+
+/* Textura sutil y fibras para ambas páginas */
+.book-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(0, 0, 0, 0.12) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 8px 8px, 12px 12px;
+  background-position: 0 0, 4px 4px;
+  opacity: 0.5;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Borde derecho biselado estilo páginas del libro */
+.book-page::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.05) 60%, transparent 100%);
+  pointer-events: none;
+}
+
+.book-cover {
+  z-index: 10;
+}
+
+.inner-page {
+  z-index: 5;
+}
+
+/* Contenedor del marco */
+.vintage-frame-container {
+  position: relative;
+  width: 95%;
+  height: auto;
+  min-height: 250px;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 30px;
+}
+
+/* El SVG escala adaptándose al tamaño sin perder nitidez */
+.frame-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.94;
+  filter: drop-shadow(0.3px 0.3px 0.2px rgba(0, 0, 0, 0.4));
+}
+
+.cover-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  padding: 10px;
+}
+
+/* Tipografía de la portada */
+.author-title {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 2.5rem;
+  letter-spacing: 4px;
+  color: var(--cover-ink);
+  margin-bottom: 4px;
+  text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.3);
+  mix-blend-mode: multiply;
+}
+
+.main-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 3.5rem;
+  letter-spacing: 3px;
+  color: var(--cover-ink);
+  margin-bottom: 15px;
+  margin-top: 10px;
+  line-height: 1;
+  text-transform: uppercase;
+  transform: scaleY(1.2); /* Condensed look */
+  text-shadow:
+    0.5px 0.5px 1px rgba(0, 0, 0, 0.4),
+    -0.2px -0.2px 0 rgba(0, 0, 0, 0.1);
+  mix-blend-mode: multiply;
+}
+
+.tagline {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  letter-spacing: 0.8px;
+  color: rgba(18, 20, 23, 0.88);
+  mix-blend-mode: multiply;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* Botón estilo placa de imprenta */
+.open-book-btn {
+  margin-top: 40px;
+  background: transparent;
+  border: 1.5px solid rgba(20, 23, 26, 0.85);
+  color: var(--cover-ink);
+  padding: 12px 28px;
+  font-family: 'Special Elite', monospace;
+  letter-spacing: 2.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  mix-blend-mode: multiply;
+}
+
+.open-book-btn span {
+  display: block;
+  font-size: 1rem;
+}
+
+.open-book-btn small {
+  display: block;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+.open-book-btn:hover {
+  background-color: var(--cover-ink);
+  color: var(--paper-ivory);
+  mix-blend-mode: normal;
+}
+
+/* Animación de apertura: giro de página de cuaderno a pantalla completa */
+.page-turn {
+  transform: rotateY(-90deg) translateZ(-500px);
+  -webkit-transform: rotateY(-90deg) translateZ(-500px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ====================================================
+   PANTALLA INTERIOR (CARTA Y VIDEOS)
+   ==================================================== */
+.inner-content-scroll {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  max-width: 700px;
+  overflow-y: auto;
+  padding: 40px 40px;
+  text-align: center;
+  /* Scrollbar estético */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.inner-content-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.inner-content-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}
+
+/* Divisores Vintage de la imagen marfil */
+.divider-svg {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 30px auto;
+  opacity: 0.8;
+  mix-blend-mode: multiply;
+}
+
+.divider-svg.top {
+  margin-top: 10px;
+}
+
+.divider-svg.bottom {
+  margin-bottom: 20px;
+}
+
+/* Tipografía de páginas interiores marfil */
+.track-number {
+  display: block;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  mix-blend-mode: multiply;
+}
+
+.letter-title {
+  font-family: 'IM Fell English', serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  margin: 0 0 20px;
+  color: var(--faded-ink);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.15);
+  mix-blend-mode: multiply;
+}
+
+.letter-text {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  line-height: 1.7;
+  color: var(--faded-ink);
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+  mix-blend-mode: multiply;
+}
+
+/* Foto Placeholder */
+.photo-placeholder {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 4/5;
+  background: #fcfbf8;
+  border: 1px solid rgba(0,0,0,0.1);
+  margin: 30px auto;
+  box-shadow: 
+    0 4px 15px rgba(0,0,0,0.05),
+    inset 0 0 20px rgba(0,0,0,0.02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  transform: rotate(-2deg);
+}
+
+.photo-inner {
+  width: 100%;
+  height: 100%;
+  border: 1px dashed rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-caption {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: #999;
+  font-size: 1.1rem;
+}
+
+/* Sección de videos */
+.records-section {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  text-align: left;
+}
+
+.record-card {
+  border-top: 1px solid var(--border-line);
+  padding-top: 22px;
+}
+
+.video-frame {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 16/9;
+  margin: 20px auto 30px;
+  background-color: #000;
+  border: 1px solid var(--border-line);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.video-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Navegación */
+.nav-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  letter-spacing: 1.5px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.nav-btn:hover {
+  color: var(--faded-ink);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .vintage-frame-container {
+    padding: 20px 10px;
+  }
+  .inner-content-scroll {
+    padding: 20px 15px;
+  }
+  .main-title {
+    font-size: 2.2rem;
+  }
+  .author-title {
+    font-size: 1.5rem;
+  }
+}

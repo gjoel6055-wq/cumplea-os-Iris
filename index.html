@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Special Dedication</title>
+
+  <!-- Fuentes estilo imprenta clásica y vintage para Laufey -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/styles.css?v=2">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+<!-- Filtro generador de fibra y grano de papel analógico -->
+<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+  <filter id="paper-grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" />
+    <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.45 0"/>
+  </filter>
+
+  <filter id="paper-fibers">
+    <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="3" result="noise" />
+    <feDiffuseLighting in="noise" lighting-color="#fff" surfaceScale="1.4" result="light">
+      <feDistantLight azimuth="45" elevation="60" />
+    </feDiffuseLighting>
+    <feBlend mode="multiply" in="SourceGraphic" in2="light" />
+  </filter>
+  
+  <defs>
+    <!-- Motivo ornamental barroco de la esquina para las portadas azules -->
+    <g id="ornament-corner">
+      <!-- Arco principal y volutas -->
+      <path d="M 12 78 C 14 52 28 28 55 18 C 68 14 80 12 95 12" fill="none" stroke="#121518" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M 28 72 C 30 54 42 36 60 28" fill="none" stroke="#121518" stroke-width="1.1"/>
+      <!-- Rizo y hojas de acanto grabadas -->
+      <path d="M 44 42 C 38 32 46 22 56 26 C 64 30 60 44 48 44 C 40 44 38 52 46 54 C 54 55 58 48 56 42" fill="#121518" fill-opacity="0.92"/>
+      <path d="M 32 50 C 26 44 24 34 32 30 C 38 27 42 34 38 40 Z" fill="#121518"/>
+      <path d="M 50 24 C 54 16 64 16 66 22 C 67 28 58 30 52 26 Z" fill="#121518"/>
+      <!-- Puntos ornamentales en la filigrana -->
+      <circle cx="20" cy="58" r="2.2" fill="#121518"/>
+      <circle cx="70" cy="18" r="2.2" fill="#121518"/>
+      <circle cx="34" cy="34" r="1.8" fill="#121518"/>
+      <circle cx="82" cy="14" r="1.8" fill="#121518"/>
+    </g>
+
+    <!-- Divisor horizontal vintage para las páginas marfil -->
+    <g id="ornament-divider">
+      <path d="M 0 20 L 150 20 Q 160 10 170 20 Q 180 30 190 20 Q 200 10 210 20 Q 220 30 230 20 Q 240 10 250 20 L 400 20" fill="none" stroke="#2a2e33" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- Nudos decorativos en el centro -->
+      <circle cx="170" cy="20" r="1.8" fill="#2a2e33"/>
+      <circle cx="210" cy="20" r="1.8" fill="#2a2e33"/>
+      <circle cx="150" cy="20" r="1.5" fill="#2a2e33"/>
+      <circle cx="250" cy="20" r="1.5" fill="#2a2e33"/>
+    </g>
+  </defs>
+</svg>
+<div class="noise-overlay"></div>
+  
+<div class="notebook-container">
+  
+  <!-- ==============================================
+       PÁGINA 1: PORTADA AZUL
+       ============================================== -->
+  <section id="page-1" class="book-page book-cover" style="z-index: 6;">
+    <div class="book-spine"></div>
+    <div class="vintage-frame-container">
+      <svg class="frame-svg" viewBox="0 0 540 260" preserveAspectRatio="none">
+        <use href="#ornament-corner"/>
+        <use href="#ornament-corner" transform="translate(540, 0) scale(-1, 1)"/>
+        <use href="#ornament-corner" transform="translate(0, 260) scale(1, -1)"/>
+        <use href="#ornament-corner" transform="translate(540, 260) scale(-1, -1)"/>
+        <line x1="95" y1="12" x2="445" y2="12" stroke="#121518" stroke-width="1.6"/>
+        <circle cx="95" cy="12" r="2.6" fill="#121518"/><circle cx="445" cy="12" r="2.6" fill="#121518"/>
+        <line x1="95" y1="248" x2="445" y2="248" stroke="#121518" stroke-width="1.6"/>
+        <circle cx="95" cy="248" r="2.6" fill="#121518"/><circle cx="445" cy="248" r="2.6" fill="#121518"/>
+        <line x1="12" y1="92" x2="12" y2="168" stroke="#121518" stroke-width="1.6"/>
+        <circle cx="12" cy="92" r="2.6" fill="#121518"/><circle cx="12" cy="168" r="2.6" fill="#121518"/>
+        <line x1="528" y1="92" x2="528" y2="168" stroke="#121518" stroke-width="1.6"/>
+        <circle cx="528" cy="92" r="2.6" fill="#121518"/><circle cx="528" cy="168" r="2.6" fill="#121518"/>
+      </svg>
+      <div class="cover-content">
+        <h2 class="author-title">Carta virtual realizada </h2>
+        <h1 class="main-title">Con mucho cariño para mi prima bella.</h1>
+        <p class="tagline">De: Joel </p>
+      </div>
+    </div>
+    <button class="open-book-btn" onclick="turnPage(true)">
+      <span>ABRIR CARTA</span>
+      <small>❧ pasar de página ❧</small>
+    </button>
+  </section>
+
+  <!-- ==============================================
+       PÁGINA 2: INTERIOR (Texto y foto)
+       ============================================== -->
+  <section id="page-2" class="book-page ivory-page" style="z-index: 5;">
+    <div class="inner-content-scroll">
+
+      <svg class="divider-svg top" viewBox="0 0 400 40">
+        <use href="#ornament-divider"/>
+      </svg>
+
+      <header class="letter-header">
+        <span class="track-number">Pagina 01</span>
+        <h2 class="letter-title"> ----</h2>
+      </header>
+
+      <div class="photo-placeholder">
+        <div class="photo-inner">
+          <p class="photo-caption">/p>
+        </div>
+      </div>
+
+      <p class="letter-text">
+       Liebe Iris, heute ich will dir ein klein brief geben, dennoch sind wir ein bisschen weg, dan programme ich das virtual brief.
+
+        Soy muy feliz por la relación que hemos sabido mantener tú y yo.
+        Por esta razón te he grabado un par de canciones que sé que te gustan, espero que disfrutes mucho escuchándolas así como yo lo hice cuando las grabé, lo hice Con mucho mucho cariño.
+      </p>
+
+      <svg class="divider-svg bottom" viewBox="0 0 400 40">
+        <use href="#ornament-divider"/>
+      </svg>
+
+      <div class="nav-buttons">
+        <button class="nav-btn prev" onclick="turnPage(false)">← Anterior</button>
+        <button class="nav-btn next" onclick="turnPage(true)">Siguiente →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================
+       PÁGINA 3: INTERIOR (Video 1)
+       ============================================== -->
+  <section id="page-3" class="book-page ivory-page" style="z-index: 4;">
+    <div class="inner-content-scroll">
+
+      <svg class="divider-svg top" viewBox="0 0 400 40">
+        <use href="#ornament-divider"/>
+      </svg>
+
+      <header class="letter-header">
+        <span class="track-number">Bored</span>
+        <h2 class="letter-title"></h2>
+      </header>
+
+      <div class="video-frame">
+  <iframe
+    src="https://www.youtube.com/embed/9kw0IsYHeEI?rel=0&modestbranding=1"
+    title="Video"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+    style="width: 100%; height: 100%; border-radius: 8px;">
+  </iframe>
+</div>
+
+      <p class="letter-text center-text">
+
+      </p>
+
+      <svg class="divider-svg bottom" viewBox="0 0 400 40">
+        <use href="#ornament-divider"/>
+      </svg>
+
+      <div class="nav-buttons">
+        <button class="nav-btn prev" onclick="turnPage(false)">← Anterior</button>
+        <button class="nav-btn next" onclick="turnPage(true)">Siguiente →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================
+       PÁGINA 4: INTERIOR (Video 2)
+       ============================================== -->
+  <section id="page-4" class="book-page ivory-page" style="z-index: 3;">
+    <div class="inner-content-scroll">
+
+      <svg class="divider-svg top" viewBox="0 0 400 40">
+        <use href="#ornament-divider"/>
+      </svg>
+
+      <header class="letter-header">
+        <span class="track-number">No one noticed</span>
+        <h2 class="letter-title">Un Mensaje Especial</h2>
+      </header>
+
+      <div class="video-frame">
+  <iframe
+    src="https://www.youtube.com/embed/sBBIQVAn7hA?rel=0&modestbranding=1"
+    title="Video"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+    style="width: 100%; height: 100%; border-radius: 8px;">
+  </iframe>
+</div>
+
+      <p class="letter-text center-text">
+        Palabras que perduran en el tiempo.
+      </p>
+
+      <svg class="divider-svg bottom" viewBox="0 0 400 40">
+        <use href="#ornament-divider"/>
+      </svg>
+
+      <div class="nav-buttons">
+        <button class="nav-btn prev" onclick="turnPage(false)">← Anterior</button>
+        <button class="nav-btn next" onclick="turnPage(true)">Siguiente →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================
+       PÁGINA 5: INTERIOR (Video 3 - Nueva)
+       ============================================== -->
+  <section id="page-5" class="book-page ivory-page" style="z-index: 2;">
+    <div class="inner-content-scroll">
+
+      <svg class="divider-svg top" viewBox="0 0 400 40">
+        <use href="#ornament-divider"/>
+      </svg>
+
+      <header class="letter-header">
+        <span class="track-number">TRACK 04</span>
+        <h2 class="letter-title">Otro Instante Inolvidable</h2>
+      </header>
+
+      <div class="video-frame">
+  <iframe
+    src="https://www.youtube.com/embed/1PF9GFPmOcs?rel=0&modestbranding=1"
+    title="Video"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+    style="width: 100%; height: 100%; border-radius: 8px;">
+  </iframe>
+</div>
+
+      <p class="letter-text center-text">
+        Un recuerdo más para sumar a esta historia.
+      </p>
+
+      <svg class="divider-svg bottom" viewBox="0 0 400 40">
+        <use href="#ornament-divider"/>
+      </svg>
+
+      <div class="nav-buttons">
+        <button class="nav-btn prev" onclick="turnPage(false)">← Anterior</button>
+        <button class="nav-btn next" onclick="turnPage(true)">Siguiente →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================
+       PÁGINA 6: CONTRAPORTADA AZUL
+       ============================================== -->
+  <section id="page-6" class="book-page book-cover back-cover" style="z-index: 1;">
+    <div class="book-spine"></div>
+    <div class="vintage-frame-container">
+      <svg class="frame-svg" viewBox="0 0 540 260" preserveAspectRatio="none">
+        <use href="#ornament-corner"/>
+        <use href="#ornament-corner" transform="translate(540, 0) scale(-1, 1)"/>
+        <use href="#ornament-corner" transform="translate(0, 260) scale(1, -1)"/>
+        <use href="#ornament-corner" transform="translate(540, 260) scale(-1, -1)"/>
+        <line x1="95" y1="12" x2="445" y2="12" stroke="#121518" stroke-width="1.6"/>
+        <circle cx="95" cy="12" r="2.6" fill="#121518"/><circle cx="445" cy="12" r="2.6" fill="#121518"/>
+        <line x1="95" y1="248" x2="445" y2="248" stroke="#121518" stroke-width="1.6"/>
+        <circle cx="95" cy="248" r="2.6" fill="#121518"/><circle cx="445" cy="248" r="2.6" fill="#121518"/>
+        <line x1="12" y1="92" x2="12" y2="168" stroke="#121518" stroke-width="1.6"/>
+        <circle cx="12" cy="92" r="2.6" fill="#121518"/><circle cx="12" cy="168" r="2.6" fill="#121518"/>
+        <line x1="528" y1="92" x2="528" y2="168" stroke="#121518" stroke-width="1.6"/>
+        <circle cx="528" cy="92" r="2.6" fill="#121518"/><circle cx="528" cy="168" r="2.6" fill="#121518"/>
+      </svg>
+      <div class="cover-content">
+        <h1 class="main-title" style="font-size: 2.5rem;">Feliz cumpleaños!</h1>
+      </div>
+    </div>
+    <button class="open-book-btn" onclick="turnPage(false)" style="margin-top: 15px;">
+      <small>❧ volver ❧</small>
+    </button>
+  </section>
+
+</div>
+
+<script>
+  let currentPage = 1;
+  const totalPages = 6;
+
+  function turnPage(forward) {
+    if (forward && currentPage < totalPages) {
+      document.getElementById(`page-${currentPage}`).classList.add('page-turn');
+      currentPage++;
+
+      if (currentPage === 2 && typeof confetti !== 'undefined') {
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.6 },
+          colors: ['#4f728c', '#c6a664', '#e2d3b5', '#1b1c1e'],
+          gravity: 0.7
+        });
+      }
+    } else if (!forward && currentPage > 1) {
+      currentPage--;
+      document.getElementById(`page-${currentPage}`).classList.remove('page-turn');
+    }
+  }
+</script>
+</body>
+</html>
