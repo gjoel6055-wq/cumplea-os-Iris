@@ -7,7 +7,7 @@
   --faded-ink: #2c2f33;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -15,6 +15,7 @@
 
 html, body {
   width: 100%;
+  max-width: 100%;
   height: 100%;
   overflow: hidden; /* Prevent scrolling on body, scroll on content instead */
 }
@@ -35,8 +36,8 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   filter: url(#paper-grain);
   opacity: 0.35;
@@ -48,21 +49,23 @@ body {
    CONTENEDOR DEL CUADERNO Y PÁGINAS
    ==================================================== */
 .notebook-container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
   position: relative;
   perspective: 2500px;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden; /* Evita que el giro 3D genere desbordes visibles */
 }
 
 .book-page {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -73,7 +76,8 @@ body {
   -webkit-transition: -webkit-transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.9s ease;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background-color: transparent; /* Fallback for Safari */
+  background-color: transparent;
+  overflow: hidden;
 }
 
 .book-cover {
@@ -105,16 +109,9 @@ body {
   mix-blend-mode: overlay;
 }
 
-/* Borde derecho biselado estilo páginas del libro */
+/* Borde biselado eliminado en móviles para evitar la línea residual */
 .book-page::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 32px;
-  height: 100%;
-  background: linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.05) 60%, transparent 100%);
-  pointer-events: none;
+  display: none;
 }
 
 .book-cover {
@@ -183,7 +180,7 @@ body {
   margin-top: 10px;
   line-height: 1;
   text-transform: uppercase;
-  transform: scaleY(1.2); /* Condensed look */
+  transform: scaleY(1.2);
   text-shadow:
     0.5px 0.5px 1px rgba(0, 0, 0, 0.4),
     -0.2px -0.2px 0 rgba(0, 0, 0, 0.1);
@@ -235,7 +232,7 @@ body {
   mix-blend-mode: normal;
 }
 
-/* Animación de apertura: giro de página de cuaderno a pantalla completa */
+/* Animación de apertura */
 .page-turn {
   transform: rotateY(-90deg) translateZ(-500px);
   -webkit-transform: rotateY(-90deg) translateZ(-500px);
@@ -253,9 +250,9 @@ body {
   height: 100%;
   max-width: 700px;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 40px 40px;
   text-align: center;
-  /* Scrollbar estético */
   scrollbar-width: thin;
   scrollbar-color: rgba(0,0,0,0.2) transparent;
   display: flex;
@@ -272,7 +269,7 @@ body {
   border-radius: 3px;
 }
 
-/* Divisores Vintage de la imagen marfil */
+/* Divisores Vintage */
 .divider-svg {
   width: 100%;
   max-width: 300px;
@@ -280,6 +277,7 @@ body {
   margin: 30px auto;
   opacity: 0.8;
   mix-blend-mode: multiply;
+  display: block;
 }
 
 .divider-svg.top {
@@ -335,7 +333,7 @@ body {
   background: #fcfbf8;
   border: 1px solid rgba(0,0,0,0.1);
   margin: 30px auto;
-  box-shadow: 
+  box-shadow:
     0 4px 15px rgba(0,0,0,0.05),
     inset 0 0 20px rgba(0,0,0,0.02);
   display: flex;
@@ -383,12 +381,14 @@ body {
   background-color: #000;
   border: 1px solid var(--border-line);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
 }
 
 .video-frame video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 /* Navegación */
@@ -430,4 +430,163 @@ body {
   .author-title {
     font-size: 1.5rem;
   }
+}
+
+/* ====================================================
+   COLLAGE DE IMÁGENES CORREGIDO (FLUJO NORMAL)
+   ==================================================== */
+.collage-container {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: 440px; /* Altura fija para contener las fotos absolutas */
+  margin: 30px auto 40px auto; /* Margen inferior para separar del texto */
+  display: block;
+  flex-shrink: 0; /* Evita que flexbox aplaste el collage */
+}
+
+/* Base estilo polaroid de cada foto */
+.collage-item {
+  position: absolute;
+  background: #fcfbf8;
+  padding: 8px 8px 16px 8px;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.12),
+    inset 0 0 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, z-index 0.3s ease;
+  z-index: 5;
+}
+
+/* Efecto cinta masking tape */
+.collage-item::before {
+  content: "";
+  position: absolute;
+  width: 42px;
+  height: 16px;
+  background: rgba(220, 215, 190, 0.55);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  backdrop-filter: blur(0.5px);
+  z-index: 10;
+}
+
+.polaroid-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.photo-box {
+  width: 100%;
+  aspect-ratio: 1/1;
+  background: #eaeae4;
+  border: 1px dashed rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.82rem;
+  color: #888;
+  overflow: hidden;
+}
+
+.photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.collage-caption {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  color: #444;
+  margin-top: 8px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Posiciones contenidas dentro de los 440px de alto */
+
+/* Foto 1 (Arriba Izquierda) */
+.pic-1 {
+  width: 170px;
+  top: 10px;
+  left: 20px;
+  transform: rotate(-5deg);
+}
+.pic-1::before {
+  top: -8px;
+  left: 25px;
+  transform: rotate(-10deg);
+}
+
+/* Foto 2 (Arriba Derecha) */
+.pic-2 {
+  width: 175px;
+  top: 20px;
+  right: 20px;
+  transform: rotate(5deg);
+  z-index: 6;
+}
+.pic-2::before {
+  top: -8px;
+  right: 30px;
+  transform: rotate(8deg);
+}
+
+/* Foto 3 (Abajo Izquierda) */
+.pic-3 {
+  width: 165px;
+  top: 210px;
+  left: 30px;
+  transform: rotate(-3deg);
+  z-index: 7;
+}
+.pic-3::before {
+  top: -8px;
+  left: 20px;
+  transform: rotate(15deg);
+}
+
+/* Foto 4 (Abajo Derecha) */
+.pic-4 {
+  width: 165px;
+  top: 220px;
+  right: 25px;
+  transform: rotate(6deg);
+  z-index: 8;
+}
+.pic-4::before {
+  top: -8px;
+  right: 20px;
+  transform: rotate(-18deg);
+}
+
+.collage-item:hover {
+  transform: scale(1.06) rotate(0deg);
+  z-index: 20;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Separación asegurada para el texto que va después */
+.inner-content-scroll .letter-text {
+  position: relative;
+  z-index: 2;
+  margin-top: 15px;
+  clear: both;
+}
+
+/* Ajuste responsive para celulares */
+@media (max-width: 480px) {
+  .collage-container {
+    max-width: 320px;
+    height: 340px;
+    margin: 20px auto 30px auto;
+  }
+  .pic-1 { width: 135px; top: 5px; left: 10px; }
+  .pic-2 { width: 140px; top: 15px; right: 10px; }
+  .pic-3 { width: 130px; top: 165px; left: 15px; }
+  .pic-4 { width: 130px; top: 175px; right: 15px; }
 }
